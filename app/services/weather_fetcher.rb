@@ -4,6 +4,7 @@ class WeatherFetcher
   def self.fetch_weather_for_location(location)
     url = "#{BASE_URL}?latitude=#{location.latitude}&longitude=#{location.longitude}&daily=temperature_2m_max,temperature_2m_min,weathercode&timeformat=unixtime"
     response = HTTParty.get(url)
+     Rails.logger.info("Weather API Response: #{response.inspect}")
 
     if response.success?
       forecast_data = response.parsed_response["daily"]

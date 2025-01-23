@@ -1,24 +1,89 @@
-<h1>7-Day Forecast for <%= @location.name %></h1>
+<h1>Weather for <%= @location.name %></h1>
 
-<% if @weather_data %>
+<% if @location.weathers.any? %>
   <table>
     <thead>
       <tr>
         <th>Date</th>
-        <th>High</th>
-        <th>Low</th>
+        <th>High Temp (°C)</th>
+        <th>Low Temp (°C)</th>
+        <th>Description</th>
       </tr>
     </thead>
     <tbody>
-      <% @weather_data.each do |daily_data| %>
+      <% @location.weathers.each do |weather| %>
         <tr>
-          <td><%= Time.at(daily_data["time"].to_i).strftime("%Y-%m-%d") %></td>
-          <td><%= daily_data["temperature_2m_max"].to_s %>°C</td>
-          <td><%= daily_data["temperature_2m_min"].to_s %>°C</td>
+          <td><%= weather.date.strftime("%Y-%m-%d") %></td>
+          <td><%= weather.high %>°C</td>
+          <td><%= weather.low %>°C</td>
+          <td><%= weather.description %></td>
         </tr>
       <% end %>
     </tbody>
   </table>
+
+<h2> 7-Day Temperature Chart</h2>
+<canvas id="tempChart" width="400" height="200"></canvas>
 <% else %>
   <p>No weather data available</p>
 <% end %>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const ctx = document.getElementById('tempChart').getContext('2d');
+    const labels = <%= raw @location.weathers.pluck(:date).map { |d| d.strftime("%Y-%m-%d") }.to_json %>;
+    const highTemps = <%= raw @location.weathers.pluck(:high).to_json %>;
+    const lowTemps = <%= raw @location.weathers.pluck(:low).to_json %>;
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'High Temperatures (°C)',
+            data: highTemps,
+            borderColor: 'rgba(255, 99, 132, 1)',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            fill: true,
+            tension: 0.4,
+          },
+          {
+            label: 'Low Temperatures (°C)',
+            data: lowTemps,
+            borderColor: 'rgba(54, 162, 235, 1)',
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            fill: true,
+            tension: 0.4,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Date',
+            },
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Temperature (°C)',
+            },
+          },
+        },
+      },
+    });
+  });
+</script>
+
+
+<button onclick="window.location.href='/'">Check Another Location</button>

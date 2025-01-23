@@ -42,7 +42,7 @@ class LocationsController < ApplicationController
       
         redirect_to location_path(@location)
       else
-        render :new
+        render :show
       end
       
     else
