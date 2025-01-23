@@ -1,3 +1,4 @@
+
 <h1>Weather for <%= @location.name %></h1>
 
 <% if @location.weathers.any? %>
@@ -30,59 +31,70 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const ctx = document.getElementById('tempChart').getContext('2d');
-    const labels = <%= raw @location.weathers.pluck(:date).map { |d| d.strftime("%Y-%m-%d") }.to_json %>;
-    const highTemps = <%= raw @location.weathers.pluck(:high).to_json %>;
-    const lowTemps = <%= raw @location.weathers.pluck(:low).to_json %>;
+document.addEventListener('DOMContentLoaded', function () {
+  initializeChart();
+});
 
-    new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [
-          {
-            label: 'High Temperatures (°C)',
-            data: highTemps,
-            borderColor: 'rgba(255, 99, 132, 1)',
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            fill: true,
-            tension: 0.4,
-          },
-          {
-            label: 'Low Temperatures (°C)',
-            data: lowTemps,
-            borderColor: 'rgba(54, 162, 235, 1)',
-            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-            fill: true,
-            tension: 0.4,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            position: 'top',
-          },
+function initializeChart() {
+  const canvas = document.getElementById('tempChart');
+  if (!canvas) {
+    console.error('Chart canvas not found');
+    return;
+  }
+  
+  const ctx = canvas.getContext('2d');
+  const labels = <%= raw @location.weathers.pluck(:date).map { |d| d.strftime("%Y-%m-%d") }.to_json %>;
+  const highTemps = <%= raw @location.weathers.pluck(:high).to_json %>.map(temp => (temp * 9 / 5) + 32);
+  const lowTemps = <%= raw @location.weathers.pluck(:low).to_json %>.map(temp => (temp * 9 / 5) + 32);
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'High Temperatures (°F)',
+          data: highTemps,
+          borderColor: 'rgba(255, 99, 132, 1)',
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          fill: true,
+          tension: 0.4,
         },
-        scales: {
-          x: {
-            title: {
-              display: true,
-              text: 'Date',
-            },
-          },
-          y: {
-            title: {
-              display: true,
-              text: 'Temperature (°C)',
-            },
-          },
+        {
+          label: 'Low Temperatures (°F)',
+          data: lowTemps,
+          borderColor: 'rgba(54, 162, 235, 1)',
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          fill: true,
+          tension: 0.4,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
         },
       },
-    });
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Date',
+          },
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Temperature (°F)',
+          },
+        },
+      },
+    },
   });
+}
+
 </script>
 
 

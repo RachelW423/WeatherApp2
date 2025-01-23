@@ -55,6 +55,7 @@ class LocationsController < ApplicationController
   def show
     @location = Location.find(params[:id])
     weather_data = @location.weather_data.present? ? JSON.parse(@location.weather_data) : nil
+    
   end
   
   
