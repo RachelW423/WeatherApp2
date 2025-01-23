@@ -1,4 +1,3 @@
 class Weather < ApplicationRecord
-  belongs_to :locations
-  validates :date, :high, :low, presence: true
+  belongs_to :location
 end

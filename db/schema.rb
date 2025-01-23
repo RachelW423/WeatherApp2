@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_22_203831) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_23_001953) do
   create_table "locations", force: :cascade do |t|
     t.string "name"
     t.string "ip_address"
@@ -22,7 +22,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_22_203831) do
   end
 
   create_table "weathers", force: :cascade do |t|
-    t.integer "locations_id", null: false
     t.date "date"
     t.float "high"
     t.float "low"
@@ -30,8 +29,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_22_203831) do
     t.string "string"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["locations_id"], name: "index_weathers_on_locations_id"
+    t.integer "location_id"
   end
-
-  add_foreign_key "weathers", "locations", column: "locations_id"
 end

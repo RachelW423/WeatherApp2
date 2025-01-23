@@ -1,36 +1,35 @@
 class WeatherFetcher
   BASE_URL = 'https://api.open-meteo.com/v1/forecast'
 
-  def self.fetch_weather_for_location(latitude, longitude)
-    url = "#{BASE_URL}?latitude=#{latitude}&longitude=#{longitude}&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=America%2FNew_York"
+  def self.fetch_weather_for_location(location)
+    url = "#{BASE_URL}?latitude=#{location.latitude}&longitude=#{location.longitude}&daily=temperature_2m_max,temperature_2m_min,weathercode&timeformat=unixtime"
     response = HTTParty.get(url)
 
     if response.success?
       forecast_data = response.parsed_response["daily"]
-      forecast_data.each do |day|
+  
+      forecast_data["time"].each_with_index do |date, index|
         Weather.create!(
           location_id: location.id,
-          date: day['date'],
-          high: day['temperature_2m_max'],
-          low: day['temperature_2m_min'],
-          description: weather_description(day['weathercode'])
+          date: Time.at(forecast_data["time"][index]).utc,  # Convert UNIX timestamp to Time
+          high: forecast_data["temperature_2m_max"][index],
+          low: forecast_data["temperature_2m_min"][index],
+          description: weather_description(forecast_data["weathercode"][index])
         )
       end
     else
-      Rails.logger.error("Error fetching weather data: #{response.message}")
+      Rails.logger.error("Failed to fetch weather data.")
     end
   end
+
+  private
 
   def self.weather_description(code)
     case code
-    when 0 then "Clear sky"
-    when 1..2 then "Partly cloudy"
-    when 3..4 then "Cloudy"
-    when 5..7 then "Rainy"
-    when 8..9 then "Snowy"
-    else "Unknown"
+    when 3 then 'Partly cloudy'
+    when 71 then 'Snow'
+    when 85 then 'Heavy snow'
+    else 'Unknown'
     end
   end
 end
-
-  

@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   root "locations#new"
   resources :layouts
-  resources :locations
+  resources :locations, only: [:new, :create, :show]
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

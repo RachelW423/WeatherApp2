@@ -10,15 +10,15 @@
       </tr>
     </thead>
     <tbody>
-      <% @weather_data["daily"].each do |day| %>
+      <% @weather_data.each do |daily_data| %>
         <tr>
-          <td><%= Date.strptime(day["dt"].to_s, '%s').strftime('%A, %b %d') %></td>
-          <td><%= day["temp"]["max"] %>°C</td>
-          <td><%= day["temp"]["min"] %>°C</td>
+          <td><%= Time.at(daily_data["time"].to_i).strftime("%Y-%m-%d") %></td>
+          <td><%= daily_data["temperature_2m_max"].to_s %>°C</td>
+          <td><%= daily_data["temperature_2m_min"].to_s %>°C</td>
         </tr>
       <% end %>
     </tbody>
   </table>
 <% else %>
-  <p>No weather data available for this location.</p>
+  <p>No weather data available</p>
 <% end %>
