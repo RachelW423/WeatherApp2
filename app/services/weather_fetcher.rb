@@ -12,7 +12,7 @@ class WeatherFetcher
       forecast_data["time"].each_with_index do |date, index|
         Weather.create!(
           location_id: location.id,
-          date: Time.at(forecast_data["time"][index]).utc,  # Convert UNIX timestamp to Time
+          date: Time.at(forecast_data["time"][index]).utc,  
           high: forecast_data["temperature_2m_max"][index],
           low: forecast_data["temperature_2m_min"][index],
         )

@@ -29,7 +29,7 @@
   <p>No weather data available</p>
 <% end %>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   initializeChart();
@@ -44,8 +44,8 @@ function initializeChart() {
   
   const ctx = canvas.getContext('2d');
   const labels = <%= raw @location.weathers.pluck(:date).map { |d| d.strftime("%Y-%m-%d") }.to_json %>;
-  const highTemps = <%= raw @location.weathers.pluck(:high).to_json %>.map(temp => (temp * 9 / 5) + 32);
-  const lowTemps = <%= raw @location.weathers.pluck(:low).to_json %>.map(temp => (temp * 9 / 5) + 32);
+  const highTemps = <%= raw @location.weathers.pluck(:high).to_json %>;
+  const lowTemps = <%= raw @location.weathers.pluck(:low).to_json %>;
 
   new Chart(ctx, {
     type: 'line',
