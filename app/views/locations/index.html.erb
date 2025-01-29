@@ -1,0 +1,23 @@
+<h1>Locations</h1>
+
+<table class="locations">
+  <thead>
+    <tr>
+      <th class= "locationsth">Name</th>
+      <th class= "locationsth">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @locations.each do |location| %>
+      <tr>
+        <td class= "locationstd"><%= location.name %></td>
+        <td class= "locationstd">
+          <%= link_to 'Show', location_path(location) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<div class="button-container">
+  <button onclick="window.location.href='/'" class="btn-submit">Check Another Location</button>
+</div>

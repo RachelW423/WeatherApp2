@@ -63,7 +63,9 @@ class LocationsController < ApplicationController
     
   end
   
-  
+  def index
+    @locations = Location.all
+  end
 
   private
 
