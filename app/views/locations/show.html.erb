@@ -6,8 +6,8 @@
     <thead>
       <tr>
         <th>Date</th>
-        <th>High Temp (°C)</th>
-        <th>Low Temp (°C)</th>
+        <th>High Temp (°F)</th>
+        <th>Low Temp (°F)</th>
         <th>Description</th>
       </tr>
     </thead>
@@ -15,8 +15,8 @@
       <% @location.weathers.each do |weather| %>
         <tr>
           <td><%= weather.date.strftime("%Y-%m-%d") %></td>
-          <td><%= weather.high %>°C</td>
-          <td><%= weather.low %>°C</td>
+          <td><%= weather.high %>°F</td>
+          <td><%= weather.low %>°F</td>
           <td><%= weather.description %></td>
         </tr>
       <% end %>
